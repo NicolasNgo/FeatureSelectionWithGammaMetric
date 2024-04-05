@@ -158,7 +158,7 @@ for(p in 1:length(n_noise)){
       }
       
       # Intermediate saves
-      file_path <- paste0('temp_res/Scenario2/res_', R, '_repetitions_', (n_noise[p] + n_var_inf), '_', sep, '_', repa, '_', Sys.Date(), '.txt')
+      file_path <- paste0('Scenario2/res_', R, '_repetitions_', (n_noise[p] + n_var_inf), '_', sep, '_', repa, '_', Sys.Date(), '.txt')
       write.table(res, file_path)
       res <- NULL
     }
@@ -174,13 +174,13 @@ parallel::stopCluster(cl)
 # To upload the results of scenario 2 we have to gather all the files corresponding to the same situation. Hence we make a distinction with the number of features first.
 
 # All the files in scenario 2
-files <- dir('temp_res/Scenario2/')
+files <- dir('Scenario2/')
 
 # Get files related to the same number of features 
-files_50 <- paste('temp_res/Scenario2/', files[grep('res_2_repetitions_50', files)], sep = '')
-files_100 <- paste('temp_res/Scenario2/', files[grep('res_2_repetitions_100', files)], sep = '')
-files_150 <- paste('temp_res/Scenario2/', files[grep('res_2_repetitions_150', files)], sep = '')
-files_200 <- paste('temp_res/Scenario2/', files[grep('res_2_repetitions_200', files)], sep = '')
+files_50 <- paste('Scenario2/', files[grep('res_2_repetitions_50', files)], sep = '')
+files_100 <- paste('Scenario2/', files[grep('res_2_repetitions_100', files)], sep = '')
+files_150 <- paste('Scenario2/', files[grep('res_2_repetitions_150', files)], sep = '')
+files_200 <- paste('Scenario2/', files[grep('res_2_repetitions_200', files)], sep = '')
 
 # Aggregating the files in one dataframe
 res_50 <- data.frame(do.call('rbind', lapply(files_50, read.table)))
