@@ -20,9 +20,12 @@ The dataframeSelectedFeaturesScenario2() and dataframeSelectedFeaturesScenario3(
 
 # MainScenario1
 The main script for scenario 1 in the simulation study. With definition of the generation parameters, parallel looping, saving results, aggregations of the results and plots.
+In the scrit, results files are saved in a folder called 'Scenario1' and the figures in a folder called 'Figures'.
 
 # MainScenario2
 The main script for scenario 2 in the simulation study. With definition of the generation parameters, parallel looping, saving results, aggregation of the results and plots.
+In the scrit, results files are saved in a folder called 'Scenario2' and the figures in a folder called 'Figures'.
 
 # MainScenario3 
 The main script for scenario 3 in the simulation study. With definition of the generation parameters, parallel looping, saving and aggregation of the results and plots.
+In the scrit, results files are saved in a folder called 'Scenario3' and the figures in a folder called 'Figures'.
