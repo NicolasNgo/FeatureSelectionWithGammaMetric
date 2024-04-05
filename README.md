@@ -1,4 +1,4 @@
-DOI: 10.5281/zenodo.10932652
+[![DOI](https://zenodo.org/badge/782467101.svg)](https://zenodo.org/doi/10.5281/zenodo.10931934)
 
 # FeatureSelectionWithGammaMetric
 Repository with the R scripts used for the simulation study of the feature selection with the gamma-metric.
