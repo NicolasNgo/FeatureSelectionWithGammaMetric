@@ -81,12 +81,17 @@ beta0 <- 0                                # Intercept value
 R <- 50                                   # Number of repetitions
 set.seed(123)                             # Seed of the simulation
 
-
-#### Parameters of the parallel computations ------------------------------------------------------------
-
 # Feature selection methods 
 Approach <- c('BASELINE', 'BEST', 'CFS', 'CHI2', 'CONS', 'IG', 'IGR', 'ONER', 
               'RELIEF', 'RFI', 'SU', 'SVM-RFE', 'GAMMA_BACK', 'GAMMA_BF', 'GAMMA_FORW', 'GAMMA_HC')
+
+# EXECUTE TO RUN THE SIMULATIONS OR GO TO UPLOADING THE RESULTS
+###########################################################################################################################################################################
+###########################################################################################################################################################################
+
+#### Parameters of the parallel computations ------------------------------------------------------------
+
+
 
 # Number of clusters
 n_clusters <- parallel::detectCores() - 1

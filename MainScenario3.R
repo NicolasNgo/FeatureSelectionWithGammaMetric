@@ -64,11 +64,16 @@ beta_vec <- produceBeta(s_g, n_g, non_zero_coeff, non_zero_group, value)    # Be
 beta <- beta_vec[-1]
 beta0 <- beta_vec[1]
 
-
-## Parameters of the parallel computations ---------------------------------------------------------------------------------------
 # Feature selection methods 
 Approach <- c('BASELINE', 'BEST', 'CFS', 'CHI2', 'CONS', 'IG', 'IGR', 'ONER', 'RELIEF', 'RFI', 'SU', 'SVM-RFE', 
               'GAMMA_BACK', 'GAMMA_BF', 'GAMMA_FORW', 'GAMMA_HC')
+
+
+# EXECUTE TO RUN THE SIMULATIONS OR GO TO UPLOADING THE RESULTS
+###########################################################################################################################################################################
+###########################################################################################################################################################################
+
+## Parameters of the parallel computations ---------------------------------------------------------------------------------------
 
 # Number of clusters
 n_clusters <- parallel::detectCores() - 1                             # Number of clusters available
