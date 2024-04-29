@@ -20,6 +20,18 @@ if(!require(reshape2)){
   devtools::install_version('reshape2', version = '1.4.4')
 }
 
+if(!require(mlr3)){
+  # Dependency package for mlr3verse used for the SVM-RFE method
+  devtools::install_version('mlr3', version = '0.18.0')
+  library(mlr3)
+}
+
+if(!require(mlr3verse)){
+  # Package used for the SVM-RFE method
+  devtools::install_version('mlr3verse', version = '0.2.8')
+  library(mlr3verse)
+}
+
 ## Sources ------------------------------------------------------------------------------------------------------------------------------
 source('functionGammaMetric.R')
 source('functionGeneration.R')
@@ -45,10 +57,6 @@ approachFunctions <- list(
   'RELIEF' <- function(f, data) FSelector::cutoff.biggest.diff(FSelector::relief(f, data)),
   'SU' <- function(f, data) FSelector::cutoff.biggest.diff(FSelector::symmetrical.uncertainty(f, data)),
   'SVM-RFE' <- function(f, data){
-    if(!require(mlr3verse)){
-      devtools::install_version('mlr3verse')
-      library(mlr3verse)
-    }
     # To ensure that y is a factor
     data$y <- factor(data$y)
     
@@ -65,15 +73,15 @@ approachFunctions <- list(
                                   positive = '1')
     
     # Add the task to the dictionary
-    mlr_tasks$add('simulated_data', task)
+    mlr3::mlr_tasks$add('simulated_data', task)
     
     # Instance
-    instance <- mlr3verse::fsi(task = tsk('simulated_data'),
+    instance <- mlr3verse::fsi(task = mlr3::tsk('simulated_data'),
                                learner = learner, 
-                               resampling = rsmp('cv', folds = 5),
-                               measures = msr('classif.mcc'),
-                               terminator = trm('none'),
-                               callback = clbk('mlr3fselect.svm_rfe'))
+                               resampling = mlr3::rsmp('cv', folds = 5),
+                               measures = mlr3::msr('classif.mcc'),
+                               terminator = mlr3verse::trm('none'),
+                               callback = mlr3verse::clbk('mlr3fselect.svm_rfe'))
     
     # Optimizer
     optimizer$optimize(inst = instance)
@@ -250,9 +258,9 @@ dataframeSelectedFeaturesScenario2 <- function(res_table){
   
   # data.frame with how much time each feature is selected
   VARSELECTED <- data.frame(sapply(Approach, FUN = function(x){
-    approach_fs <- which(res$Approach == x)
-    list_var_selected <- unlist(strsplit(res$VarSelected[approach_fs], ';'))
-    indices <- match(c(paste0('x', 1:n_var_inf), paste0('Noise', 1:n_noise)), names(table(list_var_selected)))
+    approach_fs <- which(res_table$Approach == x)
+    list_var_selected <- unlist(strsplit(res_table$VarSelected[approach_fs], ';'))
+    indices <- match(c(paste0('x', 1:n_var_inf), paste0('Noise', 1:p_prime)), names(table(list_var_selected)))
     table(list_var_selected)[indices]
   }))
   

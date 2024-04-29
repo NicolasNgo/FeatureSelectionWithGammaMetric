@@ -44,6 +44,12 @@ if(!require(doSNOW)){
   library(doSNOW)
 }
 
+if(!require(doRNG)){
+  # Package used for reproductibility of parallel looping (define a seed for parallel loop)
+  devtools::install_version('doRNG', version = '1.8.6')
+  library(doRNG)
+}
+
 if(!require(ggplot2)){
   # Package used for graphics
   devtools::install_version('ggplot2', version = '3.4.3')
@@ -68,13 +74,14 @@ n_var_inf <- 3                                     # Number of informative featu
 n_noise <- c(47, 97, 147, 197)                     # Number of non-informative features
 separation <- c('faible', 'forte')                 # Separation between classes
 repartition <- c('equilibre', 'desequilibre')      # Repartition between classes
-R <- 2                                             # Number of repetition
+R <- 50                                             # Number of repetition
 set.seed(123)                                      # Seed of the simulation
 
-## Parameters of the parallel computations -----------------------------------------------------------------------------------------
 # Feature selection methods
 Approach <- c('BASELINE', 'BEST', 'CFS', 'CHI2', 'CONS', 'IG', 'IGR', 'ONER', 
               'RELIEF', 'RFI', 'SU', 'SVM-RFE', 'GAMMA_BACK', 'GAMMA_BF', 'GAMMA_FORW', 'GAMMA_HC')
+
+## Parameters of the parallel computations -----------------------------------------------------------------------------------------
 
 # Number of clusters
 n_clusters <- parallel::detectCores()-1
@@ -132,7 +139,7 @@ for(p in 1:length(n_noise)){
         Y_test <- as.matrix(dat_test[, 1])
         
         # Perform feature selection, modelisation and prediction in parallel for each feature selection methods
-        resIteration <- foreach(fs = Approach, .combine = 'rbind', .export = ls()[!ls() %in% c('performSimulationIteration', 'X_train', 'Y_train', 'X_test', 'Y_test', 'beta')], .options.snow = opts, .verbose = FALSE) %dopar% {
+        resIteration <- foreach(fs = Approach, .combine = 'rbind', .export = ls()[!ls() %in% c('performSimulationIteration', 'X_train', 'Y_train', 'X_test', 'Y_test', 'beta')], .options.snow = opts, .verbose = FALSE) %dorng% {
           localRes <- performSimulationIteration(X_train = X_train, Y_train = Y_train, X_test = X_test, Y_test = Y_test, beta = beta, fs = fs)
           row.names(localRes) <- NULL
           return(localRes)
@@ -158,7 +165,7 @@ for(p in 1:length(n_noise)){
       }
       
       # Intermediate saves
-      file_path <- paste0('Scenario2/res_', R, '_repetitions_', (n_noise[p] + n_var_inf), '_', sep, '_', repa, '_', Sys.Date(), '.txt')
+      file_path <- paste0('Scenario2/res_', R, '_repetitions_', (n_noise[p] + n_var_inf), '_', sep, '_', repa, '.txt')
       write.table(res, file_path)
       res <- NULL
     }
@@ -177,10 +184,10 @@ parallel::stopCluster(cl)
 files <- dir('Scenario2/')
 
 # Get files related to the same number of features 
-files_50 <- paste('Scenario2/', files[grep('res_2_repetitions_50', files)], sep = '')
-files_100 <- paste('Scenario2/', files[grep('res_2_repetitions_100', files)], sep = '')
-files_150 <- paste('Scenario2/', files[grep('res_2_repetitions_150', files)], sep = '')
-files_200 <- paste('Scenario2/', files[grep('res_2_repetitions_200', files)], sep = '')
+files_50 <- paste('Scenario2/', files[grep('res_50_repetitions_50', files)], sep = '')
+files_100 <- paste('Scenario2/', files[grep('res_50_repetitions_100', files)], sep = '')
+files_150 <- paste('Scenario2/', files[grep('res_50_repetitions_150', files)], sep = '')
+files_200 <- paste('Scenario2/', files[grep('res_50_repetitions_200', files)], sep = '')
 
 # Aggregating the files in one dataframe
 res_50 <- data.frame(do.call('rbind', lapply(files_50, read.table)))
@@ -334,16 +341,16 @@ for(i in 1:nrow(RES_50)){
 ## Code for Table 3 --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Upper part of the table
-cbind(RES_200[which(RES_200$Separation == 'forte' & RES_200$Repartition == 'equilibre'), 
+print(xtable::xtable(cbind(RES_200[which(RES_200$Separation == 'forte' & RES_200$Repartition == 'equilibre'), 
               c('Approach', 'NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')],
       RES_200[which(RES_200$Separation == 'faible' & RES_200$Repartition == 'equilibre'), 
-              c('NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')])
+              c('NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')]), style = 'latex', digits = c(0, 0, 2, 2, 2, 2, 3, 2, 2, 2, 2, 3)))
 
 # Lower part of the table
-cbind(RES_200[which(RES_200$Separation == 'forte' & RES_200$Repartition == 'desequilibre'),
+print(xtable::xtable(cbind(RES_200[which(RES_200$Separation == 'forte' & RES_200$Repartition == 'desequilibre'),
               c('Approach', 'NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')],
-      RES_200[which(RES_200$Separation == 'faible') & RES_200$Repartition == 'desequilibre',
-              c('NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')])
+      RES_200[which(RES_200$Separation == 'faible' & RES_200$Repartition == 'desequilibre'),
+              c('NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')]), style = 'latex', digits = c(0, 0, 2, 2, 2, 2, 3, 2, 2, 2, 2, 3)))
 
 
 
@@ -356,7 +363,7 @@ cbind(RES_200[which(RES_200$Separation == 'forte' & RES_200$Repartition == 'dese
 VARSELECTED_LONG_faible_desequilibre <- dataframeSelectedFeaturesScenario2(res_200[which(res_200$Separation == 'faible' & res_200$Repartition == 'desequilibre'),])
 VARSELECTED_LONG_faible_equilibre <- dataframeSelectedFeaturesScenario2(res_200[which(res_200$Separation == 'faible' & res_200$Repartition == 'equilibre'),])
 VARSELECTED_LONG_forte_desequilibre <- dataframeSelectedFeaturesScenario2(res_200[which(res_200$Separation == 'forte' & res_200$Repartition == 'desequilibre'),])
-VARSELECTED_LONG_forte_equilibre <- dataframeSelectedFeaturesScenario2(res_200[which(res_200$Separation == 'forte' & res_200$Repartition == 'equilibre')],)
+VARSELECTED_LONG_forte_equilibre <- dataframeSelectedFeaturesScenario2(res_200[which(res_200$Separation == 'forte' & res_200$Repartition == 'equilibre'),])
 
 # Modification of the labels 
 VARSELECTED_LONG_faible_desequilibre[, c('Balance', 'Separation')] <- rep(c('Unbalanced', 'Weak'), each = nrow(VARSELECTED_LONG_faible_desequilibre))
@@ -368,28 +375,26 @@ VARSELECTED_LONG_forte_equilibre[, c('Balance', 'Separation')] <- rep(c('Balance
 VARSELECTED_LONG <- rbind(VARSELECTED_LONG_faible_desequilibre, VARSELECTED_LONG_faible_equilibre, VARSELECTED_LONG_forte_desequilibre, VARSELECTED_LONG_forte_equilibre)
 
 # Plot 
-plot_selection <- ggplot(data = VARSELECTED_LONG, aes(x = Feature, y = variable))+
-  geom_tile(aes(fill = value), color = 'grey', lwd = 0.05, linetype = 1)+
+plot_figure_03 <- ggplot(data = VARSELECTED_LONG, aes(x = Feature, y = variable))+
+  geom_tile(aes(fill = value))+
   scale_x_discrete(breaks = unique(VARSELECTED_LONG$Feature), limits = unique(VARSELECTED_LONG$Feature))+
   scale_y_discrete(limits = rev(Approach))+
   scale_fill_gradientn(colours = rev(viridis::inferno(10)), breaks = seq(0, R, R/5))+
   labs(fill = '', x = '', y =  '')+
   facet_grid(Balance~Separation)+
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 1, hjust = 0),
-        axis.text.y = element_text(size = 5),
-        legend.key.width = unit(0.25, 'cm'),
-        legend.key.height = unit(0.5, 'cm'),
-        legend.key.size = unit(0.2, 'cm'),
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 3, hjust = 1),
+        axis.text.y = element_text(size = 20),
+        legend.key.width = unit(0.75, 'cm'),
+        legend.key.height = unit(2, 'cm'),
         legend.margin = margin(0.1, 0.1, 0.1, 0.1),
-        legend.text = element_text(size = 5),
-        axis.ticks = element_line(linewidth = 0.1),
-        axis.ticks.length = unit(0.025, 'cm'),
-        strip.text.x = element_text(size = 6, margin = margin(0.025, 0, 0.025, 0, 'cm')),
-        strip.text.y = element_text(size = 6, margin = margin(0, 0.025, 0, 0.025, 'cm')))
+        legend.text = element_text(size = 20),
+        strip.text.x = element_text(size = 30, margin = margin(0.025, 0, 0.025, 0, 'cm')),
+        strip.text.y = element_text(size = 30, margin = margin(0, 0.025, 0, 0.025, 'cm')))
 
 # Save the plots
-tiff(filename = 'Figures/Ngo_Figure3.tiff', width = 1750*2, height = 936*2, res = 600, units = 'px', pointsize = 12)
-plot_selection
+setEPS()
+postscript('Figures/Figure_03.eps', width = 18, height = 10, horizontal = FALSE)
+plot_figure_03
 dev.off()
 
 ## Code for Figure 4 --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -399,8 +404,8 @@ res_200$Separation <- factor(res_200$Separation, levels = c('forte', 'faible'), 
 res_200$Repartition <- factor(res_200$Repartition, levels = c('equilibre', 'desequilibre'), labels = c('Balanced', 'Unbalanced'))
 
 # Plot
-plot_mcc <- ggplot(data = res_200, aes(x = Approach, y = MCC_validation))+
-  geom_boxplot(size = 0.3, outlier.size = 0.2, outlier.shape = 19)+
+plot_figure_04 <- ggplot(data = res_200, aes(x = Approach, y = MCC_test))+
+  geom_boxplot(size = 0.3, outlier.size = 0.8, outlier.shape = 19)+
   coord_flip()+
   scale_x_discrete(limits = rev(Approach), labels = rev(Approach))+
   scale_y_continuous(limits = c(-0.5, 1))+
@@ -408,18 +413,17 @@ plot_mcc <- ggplot(data = res_200, aes(x = Approach, y = MCC_validation))+
   grids(axis = 'x', color = 'grey', linetype = 'solid', size = 0.1)+
   labs(x = '', y = '')+
   facet_grid(Repartition~Separation)+
-  theme(axis.text.x = element_text(size = 6),
-        axis.text.y = element_text(size = 5.5),
-        axis.ticks = element_line(linewidth = 0.1),
-        axis.ticks.length = unit(0.025, 'cm'),
+  theme(axis.text.x = element_text(size = 25),
+        axis.text.y = element_text(size = 20),
         panel.background = element_rect(fill = 'white', colour = 'black', linewidth = 0.2),
-        strip.text.x = element_text(size = 7, margin = margin(0.05, 0, 0.05, 0, 'cm')), 
-        strip.text.y = element_text(size = 7, margin = margin(0, 0.05, 0, 0.05, 'cm')))
+        strip.text.x = element_text(size = 25, margin = margin(0.05, 0, 0.05, 0, 'cm')), 
+        strip.text.y = element_text(size = 25, margin = margin(0, 0.05, 0, 0.05, 'cm')))
 
-tiff(filename = 'Figures/Ngo_Figure4.tiff', width = 1750*2, height = 936*2, res = 600, units = 'px', pointsize = 12)
-plot_mcc
+setEPS()
+postscript('Figures/Figure_04.eps', width = 18, height = 10, horizontal = FALSE)
+plot_figure_04
 dev.off()
-  
+
 
 
 

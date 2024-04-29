@@ -65,7 +65,7 @@ ellipse <- function(WkM, mu){
   lambda2 <- (a + c)/2 - sqrt(((a - c)/2)^2 + b^2)
   
   # Angle of rotation of the axes of the ellipse
-  # b == 0 mean no covariance, features are independent, no rotation
+  # b == 0 mean no covariance, features are independents, no rotation
   theta <- ifelse(b != 0, atan2(lambda1 - a, b), ifelse(a < c, pi/2, 0))
   
   # angles t

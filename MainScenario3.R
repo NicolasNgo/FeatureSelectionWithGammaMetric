@@ -26,6 +26,12 @@ if(!require(doSNOW)){
   library(doSNOW)
 }
 
+if(!require(doRNG)){
+  # Package for reproductibility of parallel execution
+  devtools::install_version('doRNG', version = '1.8.6')
+  library(doRNG)
+}
+
 if(!require(ggplot2)){
   # Package use for plots
   devtools::install_version('ggplot2', version = '3.4.3')
@@ -140,7 +146,7 @@ for(simu in simulation){
     Y_test <- dat_test[, 1]
     
     # Perform feature selection, modelisation and prediction in parallel for each feature selection method
-    resIteration <- foreach(fs = Approach, .combine = 'rbind', .export = ls()[!ls() %in% c('performSimulationIteration', 'X_train', 'X_test', 'Y_train', 'Y_test', 'beta', 'c')], .options.snow = opts, .verbose = FALSE) %dopar%{
+    resIteration <- foreach(fs = Approach, .combine = 'rbind', .export = ls()[!ls() %in% c('performSimulationIteration', 'X_train', 'X_test', 'Y_train', 'Y_test', 'beta', 'c')], .options.snow = opts, .verbose = FALSE) %dorng%{
       localRes <- performSimulationIteration(X_train, Y_train, X_test, Y_test, beta, fs)
       row.names(localRes) <- NULL
       return(localRes)
@@ -158,7 +164,7 @@ for(simu in simulation){
   }
   
   # Intermediate save
-  file_path <- paste0('Scenario3/res_simulation_', simu, '_', R, '_repetitions_', Sys.Date(), '.txt')
+  file_path <- paste0('Scenario3/res_simulation_', simu, '_', R, '_repetitions.txt')
   write.table(res, file_path)
   res <- NULL
 }
@@ -228,7 +234,7 @@ cbind(RES[which(RES$Simulation == 2), c('Approach', 'NbVarSelected', 'NbVarInf',
 
 # Lower part of the table
 cbind(RES[which(RES$Simulation == 3), c('Approach', 'NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'Accuracy_test')],
-      RES[which(RES$Simulation == 4), c('NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'Accuracy_test')])
+      RES[which(RES$Simulation == 6), c('NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'Accuracy_test')])
 
 #### Figures --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -275,28 +281,26 @@ x_labels[index_of_informative_features] <- paste0('x', x_labels[index_of_informa
 x_labels[-index_of_informative_features] <- paste0('N', x_labels[-index_of_informative_features])
 
 # Figure
-plot_selection <- ggplot(data = VARSELECTED_LONG, aes(x = Feature, y = variable))+
-  geom_tile(aes(fill = value), color = 'grey', lwd = 0.05, linetype = 1)+
+plot_figure_05 <- ggplot(data = VARSELECTED_LONG, aes(x = Feature, y = variable))+
+  geom_tile(aes(fill = value))+
   scale_x_discrete(breaks = unique(VARSELECTED_LONG$Feature), limits = unique(VARSELECTED_LONG$Feature), labels = x_labels)+
   scale_y_discrete(limits = rev(Approach))+
   scale_fill_gradientn(colours = rev(viridis::inferno(10)), breaks = seq(0, R, R/5))+
   labs(fill = '', x = '', y = '')+
   facet_grid(Correlation~Constant, labeller = label_parsed)+
-  theme(axis.text.x = element_text(angle = 90, size = 2, vjust = 0.5, hjust = 0),
-        axis.text.y = element_text(size = 4),
-        legend.key.width = unit(0.25, 'cm'),
-        legend.key.size = unit(0.2, 'cm'),
-        legend.key.height = unit(0.5, 'cm'),
+  theme(axis.text.x = element_text(angle = 90, size = 5, vjust = 0.5, hjust = 1),
+        axis.text.y = element_text(size = 14),
+        legend.key.width = unit(1, 'cm'),
+        legend.key.height = unit(2, 'cm'),
         legend.margin = margin(0.01, 0.01, 0.01, 0.01),
-        legend.text = element_text(size = 5),
-        axis.ticks = element_line(linewidth = 0.1),
-        axis.ticks.length = unit(0.025, 'cm'),
-        strip.text.x = element_text(size = 5, margin = margin(0.025, 0, 0.025, 0, 'cm')),
-        strip.text.y = element_text(size = 5, margin = margin(0, 0.025, 0, 0.025, 'cm')))
+        legend.text = element_text(size = 20),
+        strip.text.x = element_text(size = 20, margin = margin(0.025, 0, 0.025, 0, 'cm')),
+        strip.text.y = element_text(size = 20, margin = margin(0, 0.025, 0, 0.025, 'cm')))
 
-# Saving the plot
-tiff(filename = 'temp_res/Scenario3/Ngo_Figure5.tiff', width = 1750*2, height = 936*2, res = 600, units = 'px', pointsize = 12)
-plot_selection
+# Saving figure
+setEPS()
+postscript('Figures/Figure_05.eps', width = 18, height = 10, horizontal = FALSE)
+plot_figure_05
 dev.off()
 
 
@@ -322,27 +326,26 @@ res$Correlation <- factor(res$Correlation,
                           ))
 
 # Plot
-plot_accuracy <- ggplot(data = res, aes(x = Approach, y = Accuracy_test))+
-  geom_boxplot(size = 0.2, outlier.size = 0.05, outlier.shape = 19)+
+plot_figure_06 <- ggplot(data = res, aes(x = Approach, y = Accuracy_test*100))+
+  geom_boxplot(size = 0.2, outlier.size = 0.25, outlier.shape = 19)+
   coord_flip()+
   scale_x_discrete(limits = rev(Approach), labels = rev(Approach))+
-  scale_y_continuous(limits = c(0.45, 1))+
+  scale_y_continuous(limits = c(40, 100))+
   grids(axis = 'y', color = 'grey', linetype = 'dashed', size = 0.2)+
   grids(axis = 'x', color = 'grey', linetype = 'solid', size = 0.1)+
   labs(x = '', y = '')+
   facet_grid(Correlation~Constant, labeller = label_parsed)+
-  theme(axis.text.x = element_text(size = 6),
-        axis.text.y = element_text(size = 4),
-        axis.ticks = element_line(linewidth = 0.1),
-        axis.ticks.length = unit(0.025, 'cm'),
+  theme(axis.text.x = element_text(size = 20),
+        axis.text.y = element_text(size = 14),
         panel.background = element_rect('white', colour = 'black', linewidth = 0.2),
-        strip.text.x = element_text(size = 7, margin = margin(0.05, 0, 0.05, 0, 'cm')),
-        strip.text.y = element_text(size = 7, margin = margin(0, 0.05, 0, 0.05, 'cm')))
+        strip.text.x = element_text(size = 20, margin = margin(0.05, 0, 0.05, 0, 'cm')),
+        strip.text.y = element_text(size = 20, margin = margin(0, 0.05, 0, 0.05, 'cm')))
 
-# Saving plots
-tiff(filename = 'temp_res/Scenario3/Ngo_Figure6.tiff', width = 1750*2, height = 936*2, res = 600, units = 'px', pointsize = 12)
-plot_accuracy
+# Save 
+postscript('Figures/Figure_06.eps', width = 18, height = 10, horizontal = FALSE)
+plot_figure_06
 dev.off()
+
 
 
 

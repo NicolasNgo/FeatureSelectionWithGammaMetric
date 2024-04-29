@@ -5,7 +5,7 @@
 ## Environment --------------------------------------------------------------------------------------------
 if(!require(devtools)){
   # Package used to install packages
-  install.package(devtools)
+  install.packages("devtools")
 }
 
 if(!require(FSelector)){
@@ -54,6 +54,12 @@ if(!require(doSNOW)){
   # Package used for parallel work
   devtools::install_version('doSNOW', version = '1.0.20')
   library(doSNOW)
+}
+
+if(!require(doRNG)){
+  # Package used for reproductibility of parallel executions (seed)
+  devtools::install_version('doRNG', version = '1.8.6')
+  library(doRNG)
 }
 
 if(!require(ggpubr)){
@@ -112,8 +118,8 @@ for(i in 1:R){
   Y_test <- as.matrix(dat_test[, 1])
   
   # Perform feature selection, modelisation and prediction in parallel for each feature selection methods
-  resIteration <- foreach(fs = Approach, .combine = 'rbind', .export = ls()[!ls() %in% c('performSimulationIteration', 'X_train', 'Y_train', 'X_test', 'Y_test')], .options.snow = opts, .verbose = FALSE) %dopar% {
-    localRes <- performSimulationIteration_draft(X_train, Y_train, X_test, Y_test, beta = beta, fs)
+  resIteration <- foreach(fs = Approach, .combine = 'rbind', .export = ls()[!ls() %in% c('performSimulationIteration', 'X_train', 'Y_train', 'X_test', 'Y_test')], .options.snow = opts, .verbose = FALSE) %dorng% {
+    localRes <- performSimulationIteration(X_train, Y_train, X_test, Y_test, beta = beta, fs)
     row.names(localRes) <- NULL
     return(localRes)
   }
@@ -128,14 +134,14 @@ close(pb)
 parallel::stopCluster(cl)
 
 #### Saving the results ----------------------------------------------------------------------------------
-file_path <- paste0('Scenario1/res_', R, '_iterations_', Sys.Date(), '.txt')
+file_path <- paste0('Scenario1/res_', R, '_iterations.txt')
 write.table(res, file_path)
 
 ############################################################################################################################################################################
 ############################################################################################################################################################################
 
 #### Uploading the results for graphics and tables -------------------------------------------------------
-res <- read.table('Scenario1/res_50_iterations_2024-02-20.txt')
+res <- read.table('Scenario1/res_50_iterations.txt')
 
 # Formating
 res <- data.frame(res)
@@ -170,6 +176,9 @@ for(i in 1:nrow(RES)){
   RES[i, 'MCC_test'] <- mean(lignes[, 'MCC_test'])
 }
 
+## Code for table 2 --------------------------------------------------------------------------------------
+print(RES[, c('Approach', "NbVarSelected", 'NbVarInf', "Specificity_selection", "Sensitivity_selection", "Accuracy_test")])
+
 #### Plot of selected features ---------------------------------------------------------------------------
 
 ## Code for Figure 1 -------------------------------------------------------------------------------------
@@ -188,39 +197,37 @@ colnames(VARSELECTED)[colnames(VARSELECTED) == 'SVM.RFE'] <- 'SVM-RFE'
 
 # Switch to a long format table
 VARSELECTED_LONG <- reshape2::melt(VARSELECTED, id.vars = 'Feature')
-Selection_plot <- ggplot(data = VARSELECTED_LONG, aes(x = Feature, y = variable))+
+plot_figure_01 <- ggplot(data = VARSELECTED_LONG, aes(x = Feature, y = variable))+
   geom_tile(aes(fill = value), color = 'white', lwd = 0.3, linetype = 1)+
   scale_x_discrete(breaks = c(paste0('x', 1:n_var_inf), paste0('Noise', 1:n_noise)), limits = c(paste0('x', 1:n_var_inf), paste0('Noise', 1:n_noise)), labels = c(paste0('x', 1:n_var_inf), paste0('N', 1:n_noise)))+
   scale_y_discrete(limits = rev(Approach))+
   scale_fill_gradientn(colours = rev(viridis::inferno(10)), breaks = seq(0, R, R/5))+
   labs(fill = '', x = '', y = '')+
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0, size = 10),
-        axis.title = element_text(size= 7), 
-        title = element_text(size = 7),
-        axis.ticks = element_line(linewidth = 0.1),
-        axis.ticks.length = unit(0.025, 'cm'))
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 30),
+        axis.text.y = element_text(size= 35), 
+        legend.text = element_text(size = 25),
+        legend.key.size = unit(5, 'cm'), 
+        legend.key.width = unit(1, 'cm'),
+        legend.key.height = unit(2, 'cm'))
 
-tiff(filename = 'Figures/Ngo_Figure1.tiff', width = 2*1750, height = 2*936, units = 'px', pointsize = 10, res = 600)
-Selection_plot
+setEPS()
+postscript('Figures/Figure_01.eps', horizontal = FALSE, width = 18, height = 10)
+plot_figure_01
 dev.off()
 
 ## Code for Figure 2 -------------------------------------------------------------------------------------
-### Plot for classification performances
-plot_acc <- ggplot(data = res, aes(x = Approach, y = Accuracy_test))+
-  geom_boxplot(size = 0.3, outlier.size = 0.02, outlier.shape = 19) +
+plot_figure_02 <- ggplot(data = res, aes(x = Approach, y = Accuracy_test*100))+
+  geom_boxplot(size = 0.3, outlier.size = 0.5, outlier.shape = 19) +
   coord_flip()+
   scale_x_discrete(limits = rev(Approach), labels = rev(Approach))+
-  scale_y_continuous(limits = c(0.5, 1))+
-  grids(axis = 'y', color = 'grey', linetype = 'dashed', size = 0.2)+
-  grids(axis = 'x', color = 'grey', linetype = 'solid', size = 0.2)+
+  scale_y_continuous(limits = c(40, 100))+
+  grids(axis = 'y', color = 'grey', linetype = 'dashed', size = 0.3)+
+  grids(axis = 'x', color = 'grey', linetype = 'solid', size = 0.3)+
   labs(y = '', x = '')+
-  theme(axis.text = element_text(size = 9),
-        axis.title = element_text(size = 7),
-        title = element_text(size = 7),
-        panel.background = element_rect(fill = 'white', colour = 'black', linewidth = 0.2),
-        axis.ticks = element_line(linewidth = 0.1),
-        axis.ticks.length = unit(0.025, 'cm'))
+  theme(axis.text = element_text(size = 35),
+        panel.background = element_rect(fill = 'white', colour = 'black', linewidth = 0.2))
 
-tiff(filename = 'Figures/Ngo_Figure2.tiff', width = 2*1750, height = 2*936, units = 'px', pointsize = 10, res = 600)
-plot_acc
+setEPS()
+postscript('Figures/Figure_02.eps', horizontal = FALSE, width = 18, height = 10)
+plot_figure_02
 dev.off()
