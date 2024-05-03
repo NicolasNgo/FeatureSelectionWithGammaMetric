@@ -1,7 +1,7 @@
 [![DOI](https://zenodo.org/badge/782467101.svg)](https://zenodo.org/doi/10.5281/zenodo.10931934)
 
 # FeatureSelectionWithGammaMetric
-Repository with the R scripts used for the simulation study of the feature selection with the $\gamma$-metric. The code was run on [SYSTEM SPEC]. Each scenario (MAinScenario1, MainScenario2, and MainScenario3) can be run independently of any other scenario. If one wish to execute one of the MainScenario make sure that all the files and folders of this repository are installed in the same directory and to set it as the working directory of your R environment. 
+Repository with the R scripts used for the simulation study of the feature selection with the $\gamma$-metric. Each scenario (MAinScenario1, MainScenario2, and MainScenario3) can be run independently of any other scenario. If one wish to execute one of the MainScenario make sure that all the files and folders of this repository are installed in the same directory and to set it as the working directory of your R environment. 
 
 # Folder Scenario 1
 Folder with all the results of scenario 1 of the simulation study (1 file).
@@ -41,3 +41,6 @@ In the scrit, results files are saved in a folder called 'Scenario3' and the fig
 
 # File appendixFigures.R
 This script contains the R code necessary to generate the figures and tables of the appendix and the supporting information. 
+
+# File sessionInfo.txt
+This file is the output of the R command sessionInfo(). The file list information about the R version, the platform used and the operating system. Also some details about the packages (and their versions) loaded and attached in the environment at the time of computation of the simulation study. 
