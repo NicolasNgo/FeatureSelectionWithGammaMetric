@@ -416,16 +416,16 @@ for(i in 1:nrow(RES_50)){
 ## Code for Table S1 --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Upper part
-print(xtable::xtable(cbind(RES_50[which(RES_50$Separation == 'forte' & RES_50$Repartition == 'equilibre'), 
+cbind(RES_50[which(RES_50$Separation == 'forte' & RES_50$Repartition == 'equilibre'), 
              c('Approach', 'NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')],
       RES_50[which(RES_50$Separation == 'faible' & RES_50$Repartition == 'equilibre'),
-             c('NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')]), style = 'latex', digits = c(0, 0, 2, 2, 2, 2, 3, 2, 2, 2, 2, 3)))
+             c('NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')])
 
 # Lower part
-print(xtable::xtable(cbind(RES_50[which(RES_50$Separation == 'forte' & RES_50$Repartition == 'desequilibre'),
+cbind(RES_50[which(RES_50$Separation == 'forte' & RES_50$Repartition == 'desequilibre'),
              c('Approach', 'NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')],
       RES_50[which(RES_50$Separation == 'faible' & RES_50$Repartition == 'desequilibre'),
-             c('NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')]), style = 'latex', digits = c(0, 0, 2, 2, 2, 2, 3, 2, 2, 2, 2, 3)))
+             c('NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')])
 
 ## Code for Figure S1 ------------------------------------------------------------------------------------------------------------------------------------------------------
 # Dataframe of selected features for each situation with 50 features
@@ -502,16 +502,16 @@ dev.off()
 ## Code for Table S2 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Upper part
-print(xtable::xtable(cbind(RES_100[which(RES_100$Separation == 'forte' & RES_100$Repartition == 'equilibre'),
+cbind(RES_100[which(RES_100$Separation == 'forte' & RES_100$Repartition == 'equilibre'),
               c('Approach', 'NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')],
       RES_100[which(RES_100$Separation == 'faible' & RES_100$Repartition == 'equilibre'),
-              c('NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')]), style = 'latex', digits = c(0, 0, 2, 2, 2, 2, 3, 2, 2, 2, 2, 3)))
+              c('NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')])
 
 # Lower part
-print(xtable::xtable(cbind(RES_100[which(RES_100$Separation == 'forte' & RES_100$Repartition == 'desequilibre'), 
+cbind(RES_100[which(RES_100$Separation == 'forte' & RES_100$Repartition == 'desequilibre'), 
               c('Approach', 'NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')],
       RES_100[which(RES_100$Separation == 'faible' & RES_100$Repartition == 'desequilibre'), 
-              c('NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')]), style = 'latex', digits = c(0, 0, 2, 2, 2, 2, 3, 2, 2, 2, 2, 3)))
+              c('NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')])
 
 ## Code for figure S3 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -577,16 +577,16 @@ dev.off()
 ## Code for Table S3 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Upper part
-print(xtable::xtable(cbind(RES_150[which(RES_150$Separation == 'forte' & RES_150$Repartition == 'equilibre'),
+cbind(RES_150[which(RES_150$Separation == 'forte' & RES_150$Repartition == 'equilibre'),
               c('Approach', 'NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')],
       RES_150[which(RES_150$Separation == 'faible' & RES_150$Repartition == 'equilibre'),
-              c('NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')]), style = 'latex', digits = c(0, 0, 2, 2, 2, 2, 3, 2, 2, 2, 2, 3)))
+              c('NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')])
 
 # Lower part
-print(xtable::xtable(cbind(RES_150[which(RES_150$Separation == 'forte' & RES_150$Repartition == 'desequilibre'),
+cbind(RES_150[which(RES_150$Separation == 'forte' & RES_150$Repartition == 'desequilibre'),
               c('Approach', 'NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')],
       RES_150[which(RES_150$Separation == 'faible' & RES_150$Repartition == 'desequilibre'),
-              c('NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')]), style = 'latex', digits = c(0, 0, 2, 2, 2, 2, 3, 2, 2, 2, 2, 3)))
+              c('NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')])
 
 ## Code for figure S5 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 VARSELECTED_LONG_faible_desequilibre <- dataframeSelectedFeaturesScenario2(res_150[which(res_150$Separation == 'faible' & res_150$Repartition == 'desequilibre'),])

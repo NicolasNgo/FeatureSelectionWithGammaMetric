@@ -3,29 +3,6 @@
 ####################################################################################################################################
 
 ## Environment ---------------------------------------------------------------------------------------------------------------------
-if(!require(devtools)){
-  # Package to install package
-  install.packages('devtools')
-}
-
-if(!require(stringr)){
-  # Package to manipulate string
-  devtools::install_version('stringr', version = '1.5.0')
-  library(stringr)
-}
-
-if(!require(parallel)){
-  # Package to execute parallel work
-  devtools::install_version('parallel', version = '4.3.1')
-  library(parallel)
-}
-
-if(!require(doSNOW)){
-  # Package to execute parallel work
-  devtools::install_version('doSNOW', version = '1.0.20')
-  library(doSNOW)
-}
-
 if(!require(doRNG)){
   # Package for reproductibility of parallel execution
   devtools::install_version('doRNG', version = '1.8.6')

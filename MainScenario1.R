@@ -3,34 +3,6 @@
 ###########################################################################################################
 
 ## Environment --------------------------------------------------------------------------------------------
-if(!require(devtools)){
-  # Package used to install packages
-  install.packages("devtools")
-}
-
-if(!require(FSelector)){
-  # Package to call feature selection methods
-  devtools::install_version('FSelector', version = '0.34')
-  library(FSelector)
-}
-
-if(!require(caret)){
-  # Package used to calibrate models (and compute some indicators)
-  devtools::install_version('caret', version = '6.0.94')
-  library(caret)
-}
-
-if(!require(pROC)){
-  # Package used to compute performance indicators
-  devtools::install_version('pROC', version = '1.18.4')
-  library(pROC)
-}
-
-if(!require(stringr)){
-  # Package used to manipulate strings
-  devtools::install_version('stringr', version = '1.5.0')
-  library(stringr)
-}
 
 if(!require(ggplot2)){
   # Package used to create figures
@@ -38,30 +10,12 @@ if(!require(ggplot2)){
   library(ggplot2)
 }
 
-if(!require(mltools)){
-  # Package used to compute MCC
-  devtools::install_version('mltools', version = '0.3.5')
-  library(mltools)
-}
-
-if(!require(parallel)){
-  # Pacakage used for parallel work
-  devtools::install_version('parallel', version = '4.3.1')
-  library(parallel)
-}
-
-if(!require(doSNOW)){
-  # Package used for parallel work
-  devtools::install_version('doSNOW', version = '1.0.20')
-  library(doSNOW)
-}
-
 if(!require(doRNG)){
   # Package used for reproductibility of parallel executions (seed)
   devtools::install_version('doRNG', version = '1.8.6')
   library(doRNG)
 }
-
+# 
 if(!require(ggpubr)){
   # Package used for grids in plots
   devtools::install_version('ggpubr', version = '0.6.0')
@@ -90,8 +44,6 @@ Approach <- c('BASELINE', 'BEST', 'CFS', 'CHI2', 'CONS', 'IG', 'IGR', 'ONER',
 ###########################################################################################################################################################################
 
 #### Parameters of the parallel computations ------------------------------------------------------------
-
-
 
 # Number of clusters
 n_clusters <- parallel::detectCores() - 1

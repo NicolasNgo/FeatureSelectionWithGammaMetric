@@ -3,47 +3,6 @@
 ####################################################################################################################################
 
 ## Environment ---------------------------------------------------------------------------------------------------------------------
-if(!require(devtools)){
-  # Package used to install packages
-  install.packages('devtools')
-}
-
-if(!require(FSelector)){
-  # Package used for feature selection
-  devtools::install_version('FSelector', version = '0.34')
-  library(FSelector)
-}
-
-if(!require(caret)){
-  # Package used to calibrate models (and compute indicators)
-  devtools::package_version('caret', version = '6.0.94')
-  library(caret)
-}
-
-if(!require(pROC)){
-  # Package used to compute performance indicators
-  devtools::install_version('pROC', version = '1.18.4')
-  library(pROC)
-}
-
-if(!require(stringr)){
-  # Package used to manipulate strings
-  devtools::install_version('stringr', version = '1.5.0')
-  library(stringr)
-}
-
-if(!require(parallel)){
-  # Package to execute parallel work
-  devtools::install_version('parallel', version = '4.3.1')
-  library(parallel)
-}
-
-if(!require(doSNOW)){
-  # Package used for parallelisation
-  devtools::install_version('doSNOW', version = '1.0.20')
-  library(doSNOW)
-}
-
 if(!require(doRNG)){
   # Package used for reproductibility of parallel looping (define a seed for parallel loop)
   devtools::install_version('doRNG', version = '1.8.6')
@@ -342,16 +301,16 @@ for(i in 1:nrow(RES_50)){
 ## Code for Table 3 --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Upper part of the table
-print(xtable::xtable(cbind(RES_200[which(RES_200$Separation == 'forte' & RES_200$Repartition == 'equilibre'), 
+cbind(RES_200[which(RES_200$Separation == 'forte' & RES_200$Repartition == 'equilibre'), 
               c('Approach', 'NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')],
       RES_200[which(RES_200$Separation == 'faible' & RES_200$Repartition == 'equilibre'), 
-              c('NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')]), style = 'latex', digits = c(0, 0, 2, 2, 2, 2, 3, 2, 2, 2, 2, 3)))
+              c('NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')])
 
 # Lower part of the table
-print(xtable::xtable(cbind(RES_200[which(RES_200$Separation == 'forte' & RES_200$Repartition == 'desequilibre'),
+cbind(RES_200[which(RES_200$Separation == 'forte' & RES_200$Repartition == 'desequilibre'),
               c('Approach', 'NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')],
       RES_200[which(RES_200$Separation == 'faible' & RES_200$Repartition == 'desequilibre'),
-              c('NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')]), style = 'latex', digits = c(0, 0, 2, 2, 2, 2, 3, 2, 2, 2, 2, 3)))
+              c('NbVarSelected', 'NbVarInf', 'Specificity_selection', 'Sensitivity_selection', 'MCC_test')])
 
 
 
