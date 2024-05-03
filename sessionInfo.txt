@@ -1,0 +1,45 @@
+R version 4.3.1 (2023-06-16 ucrt)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 19044)
+
+Matrix products: default
+
+
+locale:
+[1] LC_COLLATE=French_France.1252  LC_CTYPE=French_France.1252    LC_MONETARY=French_France.1252 LC_NUMERIC=C                   LC_TIME=French_France.1252    
+
+time zone: Europe/Paris
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] mlr3verse_0.2.8 mlr3_0.18.0     reshape2_1.4.4  caret_6.0-94    lattice_0.21-8  FSelector_0.34  corpcor_1.6.10  ggpubr_0.6.0    doRNG_1.8.6    
+[10] rngtools_1.5.2  foreach_1.5.2   ggplot2_3.5.0  
+
+loaded via a namespace (and not attached):
+  [1] rstudioapi_0.16.0      magrittr_2.0.3         modeltools_0.2-23      farver_2.1.1           corrplot_0.92          fs_1.6.3              
+  [7] RWekajars_3.9.3-2      vctrs_0.6.3            memoise_2.0.1          rstatix_0.7.2          htmltools_0.5.8.1      usethis_2.2.3         
+ [13] curl_5.2.1             broom_1.0.5            pROC_1.18.4            parallelly_1.37.1      htmlwidgets_1.6.4      desc_1.4.3            
+ [19] plyr_1.8.8             mlr3tuning_0.20.0      palmerpenguins_0.1.1   lubridate_1.9.2        cachem_1.0.8           uuid_1.1-1            
+ [25] mime_0.12              lifecycle_1.0.4        mltools_0.3.5          iterators_1.0.14       pkgconfig_2.0.3        Matrix_1.6-1          
+ [31] R6_2.5.1               fastmap_1.1.1          clue_0.3-65            future_1.33.2          shiny_1.8.1.1          digest_0.6.33         
+ [37] colorspace_2.1-0       ps_1.7.5               mlr3misc_0.15.0        pkgload_1.3.4          randomForest_4.7-1.1   fansi_1.0.4           
+ [43] timechange_0.2.0       abind_1.4-5            compiler_4.3.1         remotes_2.5.0          withr_3.0.0            backports_1.4.1       
+ [49] carData_3.0-5          viridis_0.6.5          spacefillr_0.3.2       pkgbuild_1.4.4         ggsignif_0.6.4         MASS_7.3-60           
+ [55] lava_1.8.0             sessioninfo_1.2.2      ModelMetrics_1.2.2.2   tools_4.3.1            prabclus_2.3-3         httpuv_1.6.11         
+ [61] future.apply_1.11.2    nnet_7.3-19            glue_1.6.2             funchir_0.2.2          lgr_0.4.4              callr_3.7.6           
+ [67] nlme_3.1-163           promises_1.2.1         grid_4.3.1             checkmate_2.2.0        cluster_2.1.4          generics_0.1.3        
+ [73] snow_0.4-4             recipes_1.0.10         gtable_0.3.4           class_7.3-22           tidyr_1.3.1            data.table_1.15.4     
+ [79] flexmix_2.3-19         car_3.1-2              utf8_1.2.3             pillar_1.9.0           stringr_1.5.1          later_1.3.1           
+ [85] robustbase_0.99-0      bbotk_0.7.3            rJava_1.0-6            splines_4.3.1          dplyr_1.1.3            mlr3tuningspaces_0.5.0
+ [91] survival_3.5-7         tidyselect_1.2.1       miniUI_0.1.1.1         mlr3mbo_0.2.1          gridExtra_2.3          RhpcBLASctl_0.23-42   
+ [97] stats4_4.3.1           diptest_0.76-0         hardhat_1.3.1          devtools_2.4.5         timeDate_4032.109      DEoptimR_1.1-3        
+[103] stringi_1.7.12         codetools_0.2-20       kernlab_0.9-32         mlr3viz_0.8.0          mlr3cluster_0.1.9      entropy_1.3.1         
+[109] tibble_3.2.1           cli_3.6.1              rpart_4.1.19           xtable_1.8-4           munsell_0.5.1          processx_3.8.2        
+[115] mlr3learners_0.6.0     mlr3filters_0.7.1      Rcpp_1.0.11            doSNOW_1.0.20          globals_0.16.3         parallel_4.3.1        
+[121] ellipsis_0.3.2         mlr3hyperband_0.5.0    gower_1.0.1            mclust_6.0.0           RWeka_0.4-46           profvis_0.3.8         
+[127] urlchecker_1.0.1       paradox_0.11.1         listenv_0.9.1          mlr3pipelines_0.5.1    viridisLite_0.4.2      ipred_0.9-14          
+[133] mlr3data_0.7.0         scales_1.3.0           prodlim_2023.08.28     mlr3fselect_0.12.0     purrr_1.0.2            crayon_1.5.2          
+[139] fpc_2.2-11             rlang_1.1.1           
